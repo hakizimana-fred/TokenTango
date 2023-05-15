@@ -1,23 +1,42 @@
 import Router from "express";
 import { Request, Response } from "express";
 import { provider } from "../../helpers";
+import { utils } from "ethers";
+import { UNISWAP_ABI } from "../../constants/uniswap";
+import { decode, decodeContract } from "../../exchange/decoded";
 
 const router = Router();
 
 router.get("/pending-txns", (_req: Request, res: Response) => {
   try {
     const transactions: any[] = [];
+
     provider.on("pending", async (transaction): Promise<void> => {
       const transactionInfo = await provider.getTransaction(transaction); // It gets pending transactions
       if (transactionInfo) {
-        const { hash, from, to, value, gasPrice } = transactionInfo;
-        console.log(hash, from, to, value, gasPrice);
-        transactions.push({ hash, from, to, value, gasPrice });
-      } else {
-        console.log("not found");
+        const { hash, from, to, value, gasPrice, data } = transactionInfo;
+        const byteCode = await provider.getCode(String(to));
+        const sliced = utils.hexDataSlice(data, 0, 4).toLowerCase();
+        if (sliced != "0x") {
+          const decodedData = decode(data);
+          if (decodedData) {
+            console.log("Function Method Info: ", {
+              name: decodedData.functionFragment.name,
+
+              to,
+            });
+          }
+          transactions.push({
+            hash,
+
+            to,
+            byteCode,
+            data,
+            decoded: decodedData,
+          });
+        }
       }
     });
-    //return res.status(200).json(transactions);
     setTimeout(() => {
       provider.removeAllListeners();
       if (transactions.length > 0)
@@ -25,7 +44,7 @@ router.get("/pending-txns", (_req: Request, res: Response) => {
       return res
         .status(400)
         .json({ success: false, message: "No pending transactions found" });
-    }, 5000);
+    }, 10000);
   } catch (e) {
     return res
       .status(400)
@@ -33,4 +52,5 @@ router.get("/pending-txns", (_req: Request, res: Response) => {
   }
 });
 
+//router.get("/decoded", decodeContract);
 export default router;
