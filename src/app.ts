@@ -3,6 +3,7 @@ import { CONFIGS } from "./config";
 import appMiddleware from "./middlewares/appMiddleware";
 import router from "./routes/apis/routes";
 import "dotenv/config";
+import { memPools } from "./exchange/Pending";
 
 const app = express();
 

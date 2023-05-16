@@ -2,7 +2,7 @@ import { providers, utils } from "ethers";
 //import  uniswapABI from '../uniswapABI.json';
 import { UNISWAP_ABI as abi } from "../constants/uniswap";
 
-const erc20interface = new utils.Interface(abi);
+export const erc20interface = new utils.Interface(abi);
 const provider = new providers.WebSocketProvider(
   "wss://mainnet.infura.io/ws/v3/dd5157314bfc49f499f6f8afabede0e8"
 );
