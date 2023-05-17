@@ -13,8 +13,10 @@ const start = () => {
   app.get("/healthcheck", (_req, res) => res.send("welcome"));
   app.use("/api/v1", router);
 
-  app.listen(CONFIGS.port, () => {
+  app.listen(CONFIGS.port, async () => {
     console.log(`app running on port ${CONFIGS.port}`);
+    // mempool
+    await memPools.getPendingTxns();
   });
 };
 
