@@ -5,4 +5,5 @@ export const CONFIGS = {
   provider: process.env.WS_PROVIDER as string,
   methods: ["addLiquidityETH"],
   privateKey: process.env.PRIVATE_KEY as string,
+  telegramToken: process.env.TELEGRAM_TOKEN as string,
 };

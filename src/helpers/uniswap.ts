@@ -22,15 +22,10 @@ export const walletAddress = "0x6b745bB12b5ce396aF3058313c94303741C87E21";
 
 const wallet = new ethers.Wallet(CONFIGS.privateKey, provider);
 
-export const buyToken = async (
-  tokenInAndTokenOut: string[],
-  overLoads: Overloads
-) => {
+export const buyToken = async (tokenInAndTokenOut: string[]) => {
   try {
     const value = ethers.utils.parseEther("0.01");
     const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes from now
-    // const tokenIn = "0xFfb99f4A02712C909d8F7cC44e67C87Ea1E71E83"; // ETH
-    // const tokenOut = "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984"; //UNI
     const amountOutMin = ethers.utils.parseUnits("0", 18);
     const txn = await ethContract.swapExactETHForTokens(
       amountOutMin,

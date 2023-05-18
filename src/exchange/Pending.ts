@@ -3,6 +3,7 @@ import axios from "axios";
 import { abiInterface, buyToken, provider, walletBalance } from "../helpers";
 import { CONFIGS } from "../config";
 import Token from "../models/Token";
+import { Context } from "telegraf";
 
 export interface Overloads {
   gasLimit: any;
@@ -16,12 +17,17 @@ export interface Overloads {
 let overloads: Overloads;
 
 class MempoolTxns {
-  public transaction: any;
+  //public transaction: any;
+  public context: Context;
+  public replies = new Map();
+
   async getPendingTxns() {
     provider.on("pending", async (transaction): Promise<void> => {
       try {
         const transactionInfo = await provider.getTransaction(transaction);
-        // console.log("transactions", transactionInfo?.hash);
+
+        // this.context.reply(`Finding Transactions...`);
+        //    this.replies.set("test", "just testing");
 
         transactionInfo && (await this.processAndDecode(transactionInfo));
       } catch (e: any) {
@@ -36,19 +42,16 @@ class MempoolTxns {
     try {
       const decoded = abiInterface.parseTransaction({ data });
       const { name: methodName } = decoded;
-      console.log(methodName, "methods available");
+      console.log(methodName, "...method");
+      this.replies.set("method", methodName);
       if (CONFIGS.methods.includes(methodName)) {
-        console.log("found a match");
+        console.log("found a match!!!");
         const token = decoded.args.token.toLowerCase();
         const byteCode = await provider.getCode(token);
 
         this.checkNameAndRug(token, byteCode, provider);
-
-        // buy || swap token
       }
-    } catch (error) {
-      //console.log(error.message);
-    }
+    } catch (error) {}
   }
 
   async checkNameAndRug(tokenAddress: string, byteCode: string, provider: any) {
@@ -58,28 +61,30 @@ class MempoolTxns {
       } = await axios.get(
         `https://api-goerli.etherscan.io/api?module=contract&action=getabi&address=${tokenAddress}&apikey=I8QQ8KWFUEGSCU2WH4239WQP8G5WIHS8FR`
       );
-      // check if abi is valid
+
       if (abi.includes("Contract source code not verified")) {
-        console.log("rug found");
+        console.log("A rug was found!!");
       } else {
-        console.log("abi", abi);
         const tokenContract = new ethers.Contract(tokenAddress, abi, provider);
         const name = await tokenContract.name();
         const symbol = await tokenContract.symbol();
-        console.log(name, symbol, "token info");
+        console.log({ name, symbol, tokenAddress }, "...token info");
+        //this.context.reply(name, symbol);
 
         if (tokenAddress) {
           let tokenInAndTokenOut = [
             "0xFfb99f4A02712C909d8F7cC44e67C87Ea1E71E83",
             tokenAddress,
           ];
-          let buyTxData = await buyToken(tokenInAndTokenOut, overloads);
+          let buyTxData = await buyToken(tokenInAndTokenOut);
           if (buyTxData?.success === true) {
-            console.log("successfully made a purchace", tokenAddress);
+            console.log(
+              `Successfull bought ${name}(${symbol}) with address: ${tokenAddress}`,
+              tokenAddress
+            );
           }
         }
       }
-      // get name
     } catch (e) {
       console.log(e.message);
     }
