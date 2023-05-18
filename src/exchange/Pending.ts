@@ -26,9 +26,6 @@ class MempoolTxns {
       try {
         const transactionInfo = await provider.getTransaction(transaction);
 
-        // this.context.reply(`Finding Transactions...`);
-        //    this.replies.set("test", "just testing");
-
         transactionInfo && (await this.processAndDecode(transactionInfo));
       } catch (e: any) {
         throw new Error(e.message);
