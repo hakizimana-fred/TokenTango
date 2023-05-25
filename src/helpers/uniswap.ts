@@ -8,7 +8,7 @@ export const provider = new ethers.providers.WebSocketProvider(
   CONFIGS.provider
 );
 export const signer = new ethers.Wallet(CONFIGS.privateKey);
-const account = signer.connect(provider);
+export const account = signer.connect(provider);
 
 export const ethContract = new ethers.Contract(
   CONFIGS.uniswapV2Router,
@@ -67,24 +67,18 @@ export const sellToken = async (path: string[]) => {
     let amountIn = await ethContract2.balanceOf(wallet.address);
     const amountOut = ethers.utils.parseEther("0");
 
-    let maxFeePerGas = ethers.utils.parseUnits("30", "gwei");
-    let maxPriorityFeePerGas = ethers.utils.parseUnits("5", "gwei");
-
-    const tx =
-      await ethContract.swapExactTokensForETHSupportingFeeOnTransferTokens(
-        amountIn,
-        amountOut,
-        path,
-        wallet.address,
-        deadline,
-        {
-          gasLimit: 600000,
-          maxFeePerGas: ethers.utils.parseUnits("30", "gwei"),
-          maxPriorityFeePerGas: ethers.utils.parseUnits("15", "gwei"),
-        }
-      );
-    console.log("\n\n\n ************** SELL ***************\n");
-    console.log(tx);
+    const tx = await ethContract.swapExactTokensForETH(
+      amountIn,
+      amountOut,
+      path,
+      wallet.address,
+      deadline,
+      {
+        gasLimit: 800000,
+        maxFeePerGas: ethers.utils.parseUnits("80", "gwei"),
+        maxPriorityFeePerGas: ethers.utils.parseUnits("15", "gwei"),
+      }
+    );
 
     return tx.hash;
   } catch (error) {
