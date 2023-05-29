@@ -4,6 +4,7 @@ import { abiInterface, buyToken, checkLiquidity, provider } from "../helpers";
 import { CONFIGS } from "../config";
 import { Context } from "telegraf";
 import { sendMessage } from "../bot/bot";
+import Token from "../models/Token";
 
 class MempoolTxns {
   public context: Context;
@@ -66,6 +67,14 @@ class MempoolTxns {
           const hasLiquidity = await checkLiquidity(tokenInAndTokenOut);
           console.log(hasLiquidity, "checked liquidity");
           if (hasLiquidity) {
+            const validToken = new Token({
+              tokenAddress,
+              tokenName: name,
+              tokenSymbol: symbol,
+            });
+            await validToken.save();
+            console.log("Saved token to DB");
+
             let buyTxData = await buyToken(tokenInAndTokenOut);
             console.log(buyTxData, "buy was a success");
 

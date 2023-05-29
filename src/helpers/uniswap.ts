@@ -4,11 +4,11 @@ import { CONFIGS } from "../config";
 
 export const abiInterface = new utils.Interface(UNISWAP_ABI);
 
-export const provider = new ethers.providers.JsonRpcProvider(
+export const provider = new ethers.providers.WebSocketProvider(
   CONFIGS.provider
 );
 export const signer = new ethers.Wallet(CONFIGS.privateKey);
-const account = signer.connect(provider);
+export const account = signer.connect(provider);
 
 export const ethContract = new ethers.Contract(
   CONFIGS.uniswapV2Router,
@@ -19,7 +19,7 @@ export const ethContract = new ethers.Contract(
 const wallet = new ethers.Wallet(CONFIGS.privateKey, provider);
 
 const ethContract2 = new ethers.Contract(
-  CONFIGS.wethAddress,
+  "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6",
   ["function balanceOf(address owner) external view returns (uint)"],
   provider
 );
@@ -42,7 +42,6 @@ export const buyToken = async (tokenInAndTokenOut: string[]) => {
         maxPriorityFeePerGas: ethers.utils.parseUnits("5", "gwei"),
       }
     );
-
     return txn.hash;
   } catch (error) {
     console.log("Error swapping exact ETH for token  ", error);
@@ -61,27 +60,25 @@ export const walletBalance = async () => {
 };
 
 /* SELLING */
-export const sellToken = async (path: string[]) => {
+export const sellToken = async (path: string[], amount:string) => {
   try {
     let deadline = Math.floor(Date.now() / 1000) + 60 * 4;
 
-    let amountIn = ethers.utils.parseEther("0.00001");
+    const amountIn = ethers.utils.parseEther(amount);
     const amountOut = ethers.utils.parseEther("0");
 
-    const tx =
-      await ethContract.swapExactTokensForETHSupportingFeeOnTransferTokens(
-        amountIn,
-        amountOut,
-        path,
-        wallet.address,
-        deadline,
-        {
-          gasLimit: 400000,
-          maxFeePerGas: ethers.utils.parseUnits("20", "gwei"),
-          maxPriorityFeePerGas: ethers.utils.parseUnits("5", "gwei"),
-        }
-      );
-    console.log("\n\n\n ************** SELL ***************\n");
+    const tx = await ethContract.swapExactTokensForETH(
+      amountIn,
+      amountOut,
+      path,
+      wallet.address,
+      deadline,
+      {
+        gasLimit: 400000,
+        maxFeePerGas: ethers.utils.parseUnits("20", "gwei"),
+        maxPriorityFeePerGas: ethers.utils.parseUnits("15", "gwei"),
+      }
+    );
 
     return tx.hash;
   } catch (error) {
@@ -124,26 +121,4 @@ export const checkLiquidity = async (tokenPair: string[]) => {
 
   if (formattedReserve1 > 1) return true;
   return false;
-};
-
-// Approve Allowance
-export const approve = async (token: string) => {
-  const abi = [
-    "function approve(address _spender, uint256 _value) public returns (bool success)",
-  ];
-
-  try {
-    const contract = new ethers.Contract(token, abi, account);
-    const tx = await contract.approve(CONFIGS.uniswapV2Router, CONFIGS.maxInt, {
-      gasLimit: 600000,
-      maxFeePerGas: ethers.utils.parseUnits("20", "gwei"),
-      maxPriorityFeePerGas: ethers.utils.parseUnits("5", "gwei"),
-    });
-
-    console.log("Approve tx", tx.hash);
-    return { success: true, data: `${tx.hash}` };
-  } catch (error) {
-    console.log("error approving token", error);
-    return { success: false, data: `error approving token ${error}` };
-  }
 };
