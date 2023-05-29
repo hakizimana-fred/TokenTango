@@ -64,7 +64,7 @@ export const sellToken = async (path: string[]) => {
   try {
     let deadline = Math.floor(Date.now() / 1000) + 60 * 4;
 
-    let amountIn = await ethContract2.balanceOf(wallet.address);
+    const amountIn = ethers.utils.parseEther("0.003");
     const amountOut = ethers.utils.parseEther("0");
 
     const tx = await ethContract.swapExactTokensForETH(

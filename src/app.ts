@@ -36,12 +36,11 @@ const start = async () => {
   app.listen(CONFIGS.port, async () => {
     console.log(`app running on port ${CONFIGS.port}`);
 
-    await memPools.getPendingTxns();
+    //await memPools.getPendingTxns();
 
-    // approvemethod
-    // const approved = await approve(
-    //   "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984"
-    // );
+    const approved = await approve(
+      "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984"
+    );
 
     // if (approved.success === true) {
     //   console.log("you can sell this token");
