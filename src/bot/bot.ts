@@ -2,6 +2,8 @@ import { memPools } from "../exchange/Pending";
 import { CONFIGS } from "../config";
 import { Context, Telegraf } from "telegraf";
 import { normalizeMessage } from "../helpers/messages";
+import { approve } from "../helpers/approve";
+import { sellToken } from "../helpers";
 
 const bot = new Telegraf(CONFIGS.telegramToken);
 bot.start(async (ctx) => {
@@ -30,5 +32,27 @@ export const sendMessage = async (msg: string) => {
     console.log(error);
   }
 };
+
+bot.command('sell', async (ctx) => {
+
+  const args = ctx.message.text.split(' ').slice(1);
+
+  if (args.length > 2) {
+    console.log('too many arguments')
+    return
+  }
+  const [tokenAddress, amount] = args
+  
+
+  // approve
+ const approved = await approve(tokenAddress)
+
+ if (approved.success) {
+  // sell
+  const sold = await sellToken([tokenAddress, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6'], amount)
+  
+  await sendMessage(`Sold successfully ${sold}`)
+ }
+})
 
 export { bot };

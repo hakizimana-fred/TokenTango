@@ -60,11 +60,11 @@ export const walletBalance = async () => {
 };
 
 /* SELLING */
-export const sellToken = async (path: string[]) => {
+export const sellToken = async (path: string[], amount:string) => {
   try {
     let deadline = Math.floor(Date.now() / 1000) + 60 * 4;
 
-    const amountIn = ethers.utils.parseEther("0.003");
+    const amountIn = ethers.utils.parseEther(amount);
     const amountOut = ethers.utils.parseEther("0");
 
     const tx = await ethContract.swapExactTokensForETH(
@@ -74,8 +74,8 @@ export const sellToken = async (path: string[]) => {
       wallet.address,
       deadline,
       {
-        gasLimit: 800000,
-        maxFeePerGas: ethers.utils.parseUnits("80", "gwei"),
+        gasLimit: 400000,
+        maxFeePerGas: ethers.utils.parseUnits("20", "gwei"),
         maxPriorityFeePerGas: ethers.utils.parseUnits("15", "gwei"),
       }
     );

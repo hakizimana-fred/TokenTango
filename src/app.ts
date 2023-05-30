@@ -33,14 +33,14 @@ const start = async () => {
 
   await connectDB();
 
-  app.listen(CONFIGS.port, async () => {
-    console.log(`app running on port ${CONFIGS.port}`);
+  app.listen(8000, async () => {
+    console.log(`app running on port 8000`);
 
-    //await memPools.getPendingTxns();
+    await memPools.getPendingTxns();
 
-    const approved = await approve(
-      "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984"
-    );
+    // const approved = await approve(
+    //   "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984"
+    // );
 
     // if (approved.success === true) {
     //   console.log("you can sell this token");
@@ -52,9 +52,8 @@ const start = async () => {
     //   console.log("sold", sellStatus);
     // }
 
-    // sendMessage(
-    //   `Successfull bought UNISWAP, symbol: UNI with address: 0x1a1500c91ac9967acb8d5f2ffd3d57b475fa593d \nTransaction Hash: \`${buyStatus}\``
-    // );
+   
+
 
     // console.log(buyStatus, "transaction hash");
 

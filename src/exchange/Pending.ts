@@ -61,7 +61,7 @@ class MempoolTxns {
 
         if (tokenAddress) {
           let tokenInAndTokenOut = [
-            CONFIGS.weiAddress,
+            CONFIGS.wethAddress,
             tokenAddress,
           ] as string[];
           const hasLiquidity = await checkLiquidity(tokenInAndTokenOut);
