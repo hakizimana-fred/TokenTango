@@ -1,22 +1,32 @@
-import { UniswapHelper } from "../../helpers/uniswap";
+import { providers } from "ethers";
+import { TransactionHelper, ExhangeHelper } from "../../helpers";
 import logger from "../logger";
 
-const uniswapHelper = new UniswapHelper();
+const transactionHelper = new TransactionHelper();
 
 export class MempoolTxns {
   async getPendingTxns() {
-    uniswapHelper
+    transactionHelper
       .getProvider()
       .on("pending", async (transaction): Promise<void> => {
         try {
-          const transactionInfo = await uniswapHelper.getTransaction(
+          const transactionInfo = await transactionHelper.getTransaction(
             transaction
           );
-          console.log("tranactionInfo", transactionInfo);
+          transactionInfo && (await this.processAndDecode(transactionInfo));
         } catch (e) {
           logger.log(e.message);
           throw new Error(e.message);
         }
       });
+  }
+
+  async processAndDecode(transactionInfo: providers.TransactionResponse) {
+    const { data } = transactionInfo;
+    try {
+      const decoded = ExhangeHelper.abiInterface.parseTransaction({ data });
+      const { name: methodName } = decoded;
+      console.log(methodName, "just method name");
+    } catch (e) {}
   }
 }

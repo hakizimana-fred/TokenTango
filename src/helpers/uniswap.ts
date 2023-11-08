@@ -1,13 +1,6 @@
-import { ethers } from "ethers";
-import { Environment } from "../configs/environment";
+import { utils } from "ethers";
+import { UNISWAP_ABI } from "../constants/uniswap";
 
-export class UniswapHelper {
-  getProvider() {
-    return new ethers.providers.WebSocketProvider(
-      Environment.GOERLI_PROVIDER as string
-    );
-  }
-  getTransaction(transaction: string) {
-    return this.getProvider().getTransaction(transaction);
-  }
+export class ExhangeHelper {
+  static abiInterface = new utils.Interface(UNISWAP_ABI);
 }
