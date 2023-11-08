@@ -4,7 +4,7 @@
   "description": "Your automated Uniswap trading assistant for seamless liquidity provision and optimized token swapping in the decentralized finance (DeFi) space. ## 📖 Introduction",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=production node ./build/app.js",
+    "start": "DEBUG=token-tango:* NODE_ENV=production node ./build/app.js",
     "dev": "DEBUG=token-tango:* NODE_ENV=development ts-node-dev src/app.ts",
     "debug": "DEBUG=token-tango:* ts-node-dev src/app.ts",
     "build": "node_modules/.bin/rimraf ./build && npx tsc",

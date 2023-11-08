@@ -5,6 +5,7 @@ import logger from "../logger";
 const transactionHelper = new TransactionHelper();
 
 export class MempoolTxns {
+  // Retrieve pending transactions from the mempool
   async getPendingTxns() {
     transactionHelper
       .getProvider()
