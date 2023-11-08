@@ -11,9 +11,14 @@ import { approve } from "./helpers/approve";
 import logger from "./lib/logger";
 
 const app = express();
+const { PORT } = process.env;
 const start = async () => {
   try {
-    logger.info("Starting well ");
+    appMiddleware(app);
+    // routes
+    app.get("/health", (_req, res) => res.send("welcome!!!"));
+
+    app.listen(PORT, () => logger.info(`Server running on port! ${PORT}`));
   } catch (e) {
     logger.log(e.message);
   }
