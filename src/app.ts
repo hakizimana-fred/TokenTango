@@ -2,7 +2,7 @@ import express from "express";
 import "dotenv/config";
 import logger from "./lib/logger";
 import appMiddleware from "./middleware/global";
-import { MempoolTxns } from "./lib/exchange/uniswap";
+//import { MempoolTxns } from "./lib/exchange/uniswap";
 import { Environment } from "./configs/environment";
 import { createServer } from "http";
 import { HEALTH_INTERVAL_CHECK } from "./constants";
