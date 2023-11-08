@@ -5,9 +5,9 @@ import appMiddleware from "./middleware/global";
 import { MempoolTxns } from "./lib/exchange/uniswap";
 import { Environment } from "./configs/environment";
 import { createServer } from "http";
+import { HEALTH_INTERVAL_CHECK } from "./constants";
 
 const app = express();
-
 const server = createServer(app);
 
 const run = async () => {
@@ -22,7 +22,7 @@ const run = async () => {
         app.get("/healthcheck", (_req, res) => {
           res.json({ message: "Server healthy" });
         });
-      }, 10000);
+      }, HEALTH_INTERVAL_CHECK);
 
       process.on("SIGTERM", () => {
         clearInterval(healthCheckInterval);
