@@ -3,10 +3,9 @@ import "dotenv/config";
 import logger from "./lib/logger";
 import appMiddleware from "./middleware/global";
 import { MempoolTxns } from "./lib/exchange/uniswap";
-import { normalizePort } from "./utils/portNormalizer";
+import { Environment } from "./configs/environment";
 
 const app = express();
-const PORT = normalizePort(process.env.PORT as string);
 
 const run = async () => {
   try {
@@ -15,8 +14,8 @@ const run = async () => {
     //routes
     app.get("/healthcheck", (_req, res) => res.send("welcome"));
 
-    app.listen(PORT, async () => {
-      logger.info(`server started on port ${PORT}`);
+    app.listen(Environment.PORT, async () => {
+      logger.info(`server started on port ${Environment.PORT}`);
       await new MempoolTxns().getPendingTxns();
     });
   } catch (e) {}

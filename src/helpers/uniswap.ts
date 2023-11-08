@@ -1,14 +1,13 @@
 import { ethers } from "ethers";
+import { Environment } from "../configs/environment";
 
 export class UniswapHelper {
   getProvider() {
     return new ethers.providers.WebSocketProvider(
-      "wss://goerli.infura.io/ws/v3/3367b8616fc542cab6035fcd5cc6680c"
+      Environment.GOERLI_PROVIDER as string
     );
   }
   getTransaction(transaction: string) {
     return this.getProvider().getTransaction(transaction);
   }
 }
-
-export const uniswapHelper = new UniswapHelper();
