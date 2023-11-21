@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 require("dotenv/config");
 const logger_1 = __importDefault(require("./lib/logger"));
 const global_1 = __importDefault(require("./middleware/global"));
+const uniswap_1 = require("./lib/exchange/uniswap");
 const environment_1 = require("./configs/environment");
 const http_1 = require("http");
 const constants_1 = require("./constants");
@@ -17,6 +18,7 @@ const run = async () => {
         server.listen(environment_1.Environment.PORT, async () => {
             logger_1.default.info(`server started on port ${environment_1.Environment.PORT}`);
             (0, global_1.default)(app);
+            await new uniswap_1.MempoolTxns().getPendingTxns();
             const healthCheckInterval = setInterval(() => {
                 app.get("/healthcheck", (_req, res) => {
                     res.json({ message: "Server healthy" });

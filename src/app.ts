@@ -2,7 +2,7 @@ import express from "express";
 import "dotenv/config";
 import logger from "./lib/logger";
 import appMiddleware from "./middleware/global";
-//import { MempoolTxns } from "./lib/exchange/uniswap";
+import { MempoolTxns } from "./lib/exchange/uniswap";
 import { Environment } from "./configs/environment";
 import { createServer } from "http";
 import { HEALTH_INTERVAL_CHECK } from "./constants";
@@ -15,9 +15,8 @@ const run = async () => {
     server.listen(Environment.PORT, async () => {
       logger.info(`server started on port ${Environment.PORT}`);
       appMiddleware(app);
-      //await new MempoolTxns().getPendingTxns();
+      await new MempoolTxns().getPendingTxns();
 
-      // Monitor server health
       const healthCheckInterval = setInterval(() => {
         app.get("/healthcheck", (_req, res) => {
           res.json({ message: "Server healthy" });

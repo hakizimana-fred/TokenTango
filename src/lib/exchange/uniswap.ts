@@ -14,7 +14,8 @@ export class MempoolTxns {
           const transactionInfo = await transactionHelper.getTransaction(
             transaction
           );
-          transactionInfo && (await this.processAndDecode(transactionInfo));
+          console.log("simply log transaction info", transactionInfo);
+          // transactionInfo && (await this.processAndDecode(transactionInfo));
         } catch (e) {
           logger.log(e.message);
           throw new Error(e.message);
