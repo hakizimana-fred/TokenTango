@@ -6,9 +6,13 @@ import { MempoolTxns } from "./lib/exchange/uniswap";
 import { Environment } from "./configs/environment";
 import { createServer } from "http";
 import { HEALTH_INTERVAL_CHECK } from "./constants";
+import { TelegramBotHelper } from "./helpers/telegram"
 
 const app = express();
 const server = createServer(app);
+
+new TelegramBotHelper()
+  .launchBot()
 
 const run = async () => {
   try {
@@ -23,6 +27,7 @@ const run = async () => {
         });
       }, HEALTH_INTERVAL_CHECK);
 
+   
       process.on("SIGTERM", () => {
         clearInterval(healthCheckInterval);
         server.close((error: Error | undefined) => {
