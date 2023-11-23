@@ -34,10 +34,18 @@ export class MempoolTxns {
 
       if (methodName === Configs.methods[0]) {
         logger.log('found a match for ', methodName)
+        let token = decoded.args.token.toLowerCase();
+
+        console.log('liquidityeth', token)
+
       }
 
      if (methodName === Configs.methods[1]) {
       logger.log('found a match for', methodName)
+
+        const [tokenA, tokenB] = [decoded.args[0], decoded.args[1]]
+        console.log('liquidity A', tokenA)
+        console.log('liquidity B', tokenB)
      }
     } catch (e) {}
   }
