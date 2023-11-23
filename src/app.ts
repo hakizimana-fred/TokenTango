@@ -19,7 +19,7 @@ const run = async () => {
     server.listen(Environment.PORT, async () => {
       logger.info(`server started on port ${Environment.PORT}`);
       appMiddleware(app);
-      // await new MempoolTxns().getPendingTxns();
+       await new MempoolTxns().getPendingTxns();
 
       const healthCheckInterval = setInterval(() => {
         app.get("/healthcheck", (_req, res) => {

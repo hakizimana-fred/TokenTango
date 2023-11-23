@@ -5,4 +5,5 @@ export class Environment {
   static GOERLI_PROVIDER = process.env.GOERLI_PROVIDER_WS_URL;
   static TELEGRAM_TOKEN = process.env.TOKEN_TELEGRAM;
   static Name = process.env.NAME;
+  static ETHER_SCAN_KEY= process.env.ETHER_SCAN_API_KEY 
 }
